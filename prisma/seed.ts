@@ -1,6 +1,7 @@
 import { PrismaClient } from '../src/generated/prisma/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import 'dotenv/config'
+import bcrypt from 'bcryptjs'
 
 const dbPath = process.env.DATABASE_URL?.replace('file:', '') || 'dev.db'
 const adapter = new PrismaBetterSqlite3({ url: dbPath })
@@ -75,6 +76,24 @@ const products = [
 
 async function main() {
   console.log('Start seeding...')
+
+  // Seed Admin User
+  const adminEmail = "admin@aura.com"
+  const adminPassword = "Admin123!"
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10)
+
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: {
+      email: adminEmail,
+      name: "Admin User",
+      password: hashedAdminPassword,
+      isAdmin: true,
+    },
+  })
+  console.log(`Admin user created: ${adminEmail}`)
+
   for (const p of products) {
     const product = await prisma.product.create({
       data: p,
@@ -92,3 +111,5 @@ main()
   .finally(async () => {
     await prisma.$disconnect()
   })
+
+  
