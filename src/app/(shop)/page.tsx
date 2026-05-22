@@ -24,10 +24,10 @@ export default async function ShopPage() {
       {/* Hero Section matching Screen 1 */}
       <section className="w-full pt-28 pb-10 px-6 md:px-10">
         <div className="w-full">
-          {/* Giant OUTFIT Header with Circled R */}
+          {/* Giant AURA Header with Circled R */}
           <div className="relative w-full select-none font-outfit mt-4">
             <div className="flex items-end justify-between relative border-b border-foreground/15 pb-2">
-              <h1 className="text-[17vw] font-black tracking-[-0.04em] leading-[0.8] text-foreground uppercase">
+              <h1 className="text-[28vw] font-black tracking-[-0.04em] leading-[0.85] text-foreground uppercase">
                 AURA
               </h1>
               {/* Circular Registered Trademark Logo */}
