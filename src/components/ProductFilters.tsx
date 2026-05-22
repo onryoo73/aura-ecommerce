@@ -82,17 +82,17 @@ export default function ProductFilters() {
       <div className="relative">
         <input
           type="text"
-          placeholder="Search products..."
+          placeholder="SEARCH..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="w-full px-4 py-3 border border-border bg-background focus:outline-none focus:border-red-500 transition-colors text-sm tracking-widest"
         />
         {searchQuery && (
           <button
             onClick={() => handleSearch("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-red-500 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -103,10 +103,10 @@ export default function ProductFilters() {
           <button
             key={category}
             onClick={() => handleCategoryChange(category)}
-            className={`px-4 py-2 rounded-full font-medium transition-colors ${
+            className={`px-4 py-2 border font-medium text-xs tracking-widest transition-colors ${
               selectedCategory === category
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                ? "border-red-500 text-red-500 bg-red-500/10"
+                : "border-border text-muted-foreground hover:border-red-500 hover:text-red-500"
             }`}
           >
             {category}
@@ -118,28 +118,28 @@ export default function ProductFilters() {
       <div className="md:hidden">
         <button
           onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-          className="w-full px-4 py-2 border border-border rounded-lg font-medium hover:bg-secondary transition-colors flex items-center justify-center"
+          className="w-full px-4 py-3 border border-border font-medium text-xs tracking-widest hover:border-red-500 hover:text-red-500 transition-colors flex items-center justify-center"
         >
           <Filter className="w-4 h-4 mr-2" />
-          Filters
+          FILTERS
         </button>
       </div>
 
       {/* Filter Sidebar (Desktop) / Drawer (Mobile) */}
-      <div className={`${isMobileFilterOpen ? "block" : "hidden"} md:block bg-white rounded-lg border border-border p-6 space-y-6`}>
+      <div className={`${isMobileFilterOpen ? "block" : "hidden"} md:block bg-card border border-border p-6 space-y-6`}>
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-lg">Filters</h3>
+          <h3 className="font-bold text-lg tracking-widest">FILTERS</h3>
           <button
             onClick={clearFilters}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs text-muted-foreground hover:text-red-500 transition-colors tracking-widest"
           >
-            Clear All
+            CLEAR ALL
           </button>
         </div>
 
         {/* Price Range */}
         <div>
-          <label className="block text-sm font-medium mb-3">Price Range</label>
+          <label className="block text-xs font-bold mb-4 tracking-widest">PRICE RANGE</label>
           <div className="px-2">
             <Slider
               value={priceRange}
@@ -150,7 +150,7 @@ export default function ProductFilters() {
               className="w-full"
             />
           </div>
-          <div className="flex justify-between mt-2 text-sm text-muted-foreground">
+          <div className="flex justify-between mt-2 text-xs text-muted-foreground">
             <span>${priceRange[0]}</span>
             <span>${priceRange[1]}</span>
           </div>
@@ -158,11 +158,11 @@ export default function ProductFilters() {
 
         {/* Sort Dropdown */}
         <div>
-          <label className="block text-sm font-medium mb-3">Sort By</label>
+          <label className="block text-xs font-bold mb-4 tracking-widest">SORT BY</label>
           <select
             value={selectedSort}
             onChange={(e) => handleSortChange(e.target.value)}
-            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+            className="w-full px-4 py-3 border border-border bg-background focus:outline-none focus:border-red-500 transition-colors text-sm tracking-widest"
           >
             {SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>

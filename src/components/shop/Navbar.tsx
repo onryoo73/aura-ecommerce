@@ -1,67 +1,85 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { ShoppingBag, User, LayoutDashboard, LogOut } from "lucide-react";
-import { useCartStore } from "@/store/cartStore";
-import { useEffect, useState } from "react";
-import CartDrawer from "./CartDrawer";
-import { useSession, signOut } from "next-auth/react";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useCartStore } from "@/store/cartStore"
+import { useThemeStore } from "@/store/themeStore"
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
 export default function Navbar() {
-  const getItemCount = useCartStore((state) => state.getItemCount);
-  const [mounted, setMounted] = useState(false);
-  const { data: session } = useSession();
+  const pathname = usePathname()
+  const getItemCount = useCartStore((state) => state.getItemCount)
+  const { theme, setTheme } = useThemeStore()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
-  const itemCount = mounted ? getItemCount() : 0;
-
-  const handleLogout = async () => {
-    await signOut({ callbackUrl: "/" });
-  };
+  const itemCount = mounted ? getItemCount() : 0
+  const isShopActive = pathname === "/" || pathname.startsWith("/product")
+  const isCartActive = pathname === "/cart"
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold tracking-tighter hover:opacity-80 transition-opacity">
-          AURA
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full px-6 md:px-10 h-20 flex items-center justify-between bg-background/80 backdrop-blur-md border-b border-border/10 transition-colors duration-300">
+      <div className="w-full flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold tracking-tight text-foreground hover:opacity-80 transition-opacity">
+          ++
         </Link>
 
-        <div className="flex items-center space-x-6">
-          <CartDrawer>
-            <button className="relative p-2 hover:bg-secondary rounded-full transition-colors group">
-              <ShoppingBag className="w-6 h-6 group-hover:scale-110 transition-transform" />
-              {itemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[1.2rem] text-center animate-in zoom-in">
-                  {itemCount}
-                </span>
-              )}
-            </button>
-          </CartDrawer>
-          
-          {session?.user?.isAdmin && (
-            <Link href="/admin/products" className="p-2 hover:bg-secondary rounded-full transition-colors group">
-              <LayoutDashboard className="w-6 h-6 group-hover:scale-110 transition-transform" />
-            </Link>
-          )}
-          
-          {session ? (
+        <div className="flex items-center gap-6 md:gap-8">
+          <Link
+            href="/"
+            className={`text-xs tracking-[0.2em] uppercase transition-colors duration-300 text-foreground py-1 relative ${
+              isShopActive ? "border-b border-foreground" : "opacity-70 hover:opacity-100"
+            }`}
+          >
+            Shop
+          </Link>
+
+          <Link
+            href="/cart"
+            className={`text-xs tracking-[0.2em] uppercase transition-colors duration-300 text-foreground py-1 relative ${
+              isCartActive ? "border-b border-foreground" : "opacity-70 hover:opacity-100"
+            }`}
+          >
+            Bag ({itemCount})
+          </Link>
+
+          {/* Theme switcher dots */}
+          <div className="flex items-center gap-2 ml-2 md:ml-4">
+            {/* Dark theme: hollow border with black dot */}
             <button
-              onClick={handleLogout}
-              className="p-2 hover:bg-secondary rounded-full transition-colors group"
-              title="Logout"
+              onClick={() => setTheme('dark')}
+              className={`w-3.5 h-3.5 rounded-full border border-foreground/45 flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                theme === 'dark' ? 'bg-foreground/10 scale-110 border-foreground' : 'opacity-70 hover:opacity-100'
+              }`}
+              aria-label="Dark Monochrome Theme"
             >
-              <LogOut className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
             </button>
-          ) : (
-            <Link href="/login" className="p-2 hover:bg-secondary rounded-full transition-colors group">
-              <User className="w-6 h-6 group-hover:scale-110 transition-transform" />
-            </Link>
-          )}
+
+            {/* Light theme: white solid */}
+            <button
+              onClick={() => setTheme('light')}
+              className={`w-3.5 h-3.5 rounded-full bg-[#f4f3f0] border border-foreground/30 transition-all duration-300 cursor-pointer ${
+                theme === 'light' ? 'scale-110 border-accent border-2' : 'opacity-70 hover:opacity-100'
+              }`}
+              aria-label="Light Minimalist Theme"
+            />
+
+            {/* Red theme: red solid */}
+            <button
+              onClick={() => setTheme('red')}
+              className={`w-3.5 h-3.5 rounded-full bg-[#e63946] border border-transparent transition-all duration-300 cursor-pointer ${
+                theme === 'red' ? 'scale-110 ring-2 ring-foreground' : 'opacity-70 hover:opacity-100'
+              }`}
+              aria-label="Brutalist Red Theme"
+            />
+          </div>
         </div>
       </div>
     </nav>
-  );
+  )
 }
