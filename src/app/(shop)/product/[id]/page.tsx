@@ -121,7 +121,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   </p>
                 </div>
               ) : (
-                <AddToCartButton product={formattedProduct} disabled={stockStatus === "out"} />
+                <AddToCartButton product={formattedProduct} disabled={false} />
               )}
             </div>
           </div>

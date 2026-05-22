@@ -46,7 +46,6 @@ export default function PageTransition({ children }: { children: React.ReactNode
       <div
         ref={overlayRef}
         className="fixed inset-0 z-[9998] bg-black flex items-center justify-center pointer-events-none"
-        style={{ yPercent: 0 }}
       >
         <div className="text-6xl md:text-8xl font-bold tracking-tighter text-white">
           AURA
