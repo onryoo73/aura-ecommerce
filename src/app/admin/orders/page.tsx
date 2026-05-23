@@ -13,8 +13,9 @@ export default async function AdminOrdersPage() {
       <h1 className="text-3xl font-bold tracking-tight mb-8">Manage Orders</h1>
 
       <div className="bg-card border border-border overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-full text-left border-collapse">
+            <thead>
             <tr className="bg-secondary/30 border-b border-border">
               <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Order ID</th>
               <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Customer</th>
@@ -61,7 +62,8 @@ export default async function AdminOrdersPage() {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
 
       {(!orders || orders.length === 0) && (

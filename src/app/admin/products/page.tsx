@@ -29,8 +29,9 @@ export default async function AdminProductsPage() {
       </div>
 
       <div className="bg-card border border-border overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-full text-left border-collapse">
+            <thead>
             <tr className="bg-secondary/30 border-b border-border">
               <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Product</th>
               <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Category</th>
@@ -84,7 +85,8 @@ export default async function AdminProductsPage() {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </div>
   )
