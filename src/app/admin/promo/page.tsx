@@ -71,14 +71,14 @@ export default async function AdminPromoPage() {
       {/* Existing items */}
       <div className="bg-card border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-full text-left border-collapse">
+          <table className="w-full min-w-full table-fixed text-left border-collapse">
             <thead>
             <tr className="bg-secondary/30 border-b border-border">
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Order</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Name</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Price</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Active</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] text-right">Actions</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Order</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Name</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Price</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Active</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] text-right whitespace-normal break-words">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">

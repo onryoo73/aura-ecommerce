@@ -30,22 +30,22 @@ export default async function AdminProductsPage() {
 
       <div className="bg-card border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-full text-left border-collapse">
+          <table className="w-full min-w-full table-fixed text-left border-collapse">
             <thead>
             <tr className="bg-secondary/30 border-b border-border">
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Product</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Category</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Price</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Stock</th>
-              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] text-right">Actions</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Product</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Category</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Price</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] whitespace-normal break-words">Stock</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] text-right whitespace-normal break-words">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
             {(products || []).map((product) => (
               <tr key={product.id} className="hover:bg-secondary/10 transition-colors">
-                <td className="p-4">
-                  <div className="flex items-center">
-                    <div className="h-12 w-12 relative flex-shrink-0 rounded overflow-hidden border border-border/50 mr-4 bg-secondary">
+                <td className="p-4 max-w-[180px] break-words">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="h-12 w-12 relative flex-shrink-0 rounded overflow-hidden border border-border/50 bg-secondary">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -53,16 +53,16 @@ export default async function AdminProductsPage() {
                         className="object-cover"
                       />
                     </div>
-                    <span className="font-medium text-sm">{product.name}</span>
+                    <span className="font-medium text-sm break-words">{product.name}</span>
                   </div>
                 </td>
-                <td className="p-4 text-sm text-muted-foreground">
+                <td className="p-4 text-sm text-muted-foreground whitespace-normal break-words max-w-[120px]">
                   {product.category}
                 </td>
-                <td className="p-4 text-sm font-medium">
+                <td className="p-4 text-sm font-medium whitespace-normal break-words max-w-[90px]">
                   {formatPrice(product.price)}
                 </td>
-                <td className="p-4 text-sm">
+                <td className="p-4 text-sm whitespace-normal break-words max-w-[80px]">
                   <span className={product.stock < 10 ? "text-destructive font-bold" : ""}>
                     {product.stock}
                   </span>
