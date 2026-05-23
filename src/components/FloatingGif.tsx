@@ -15,10 +15,10 @@ export default function FloatingGif() {
     const rw = el.offsetWidth
     const rh = el.offsetHeight
 
-    let x = w - rw - 40
-    let y = h - rh - 40
-    let vx = -(2 + Math.random() * 2)
-    let vy = -(1.5 + Math.random() * 1.5)
+    let x = 20
+    let y = 20
+    let vx = 4 + Math.random() * 3
+    let vy = 3 + Math.random() * 2
     let rotation = 0
     let raf: number
 
@@ -33,10 +33,10 @@ export default function FloatingGif() {
       x += vx
       y += vy
 
-      if (x + ew > vw) { x = vw - ew; vx = -(1.5 + Math.random() * 2); rotation += 15 }
-      if (x < 0) { x = 0; vx = 1.5 + Math.random() * 2; rotation += 15 }
-      if (y + eh > vh) { y = vh - eh; vy = -(1.5 + Math.random() * 1.5); rotation += 15 }
-      if (y < 0) { y = 0; vy = 1.5 + Math.random() * 1.5; rotation += 15 }
+      if (x + ew >= vw) { x = vw - ew; vx = -(3 + Math.random() * 3); rotation += 15 }
+      if (x <= 0) { x = 0; vx = 3 + Math.random() * 3; rotation += 15 }
+      if (y + eh >= vh) { y = vh - eh; vy = -(3 + Math.random() * 2); rotation += 15 }
+      if (y <= 0) { y = 0; vy = 3 + Math.random() * 2; rotation += 15 }
 
       el.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`
       raf = requestAnimationFrame(animate)
