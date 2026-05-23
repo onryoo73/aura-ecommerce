@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import gsap from "gsap"
 
@@ -8,30 +8,34 @@ export default function PageTransition({ children }: { children: React.ReactNode
   const pathname = usePathname()
   const containerRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const lettersRef = useRef<HTMLSpanElement[]>([])
 
   useEffect(() => {
-    setIsAnimating(true)
+    const timeline = gsap.timeline()
 
-    const timeline = gsap.timeline({
-      onComplete: () => setIsAnimating(false),
-    })
-
-    // Fade in black overlay with AURA text
     timeline
       .fromTo(
+        lettersRef.current,
+        { y: 60, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out" }
+      )
+      .to(
+        lettersRef.current,
+        { y: -50, opacity: 0, duration: 0.4, stagger: 0.06, ease: "power2.in" },
+        "+=0.4"
+      )
+      .to(
         overlayRef.current,
-        { yPercent: 0, opacity: 1 },
-        { yPercent: -100, opacity: 1, duration: 1, ease: "power4.inOut" }
+        { yPercent: -100, duration: 0.8, ease: "power4.inOut" },
+        "-=0.3"
       )
 
-    // Fade in page content
     if (containerRef.current) {
       timeline.fromTo(
         containerRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-        "-=0.6"
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+        "-=0.5"
       )
     }
 
@@ -42,17 +46,23 @@ export default function PageTransition({ children }: { children: React.ReactNode
 
   return (
     <>
-      {/* Loading Overlay */}
       <div
         ref={overlayRef}
         className="fixed inset-0 z-[9998] bg-black flex items-center justify-center pointer-events-none"
       >
-        <div className="text-6xl md:text-8xl font-bold tracking-tighter text-white">
-          AURA
+        <div className="flex gap-2 md:gap-3 overflow-hidden">
+          {"AURA".split("").map((letter, i) => (
+            <span
+              key={i}
+              ref={(el) => { if (el) lettersRef.current[i] = el }}
+              className="inline-block text-[18vw] md:text-[14vw] font-bold tracking-tighter text-white leading-none select-none"
+            >
+              {letter}
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Page Content */}
       <div ref={containerRef} className="page-transition">
         {children}
       </div>
