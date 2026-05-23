@@ -1,14 +1,21 @@
 import db from "@/lib/db"
-import CustomCursor from "@/components/CustomCursor"
+import ClientOnlyCustomCursor from "@/components/ClientOnlyCustomCursor"
 import StaggeredProductGrid from "@/components/shop/StaggeredProductGrid"
 import Image from "next/image"
+import { Product } from "@/types"
 
 export const revalidate = 0 // always fetch fresh database content
 
 export default async function ShopPage() {
-  const allProducts = await db.product.findMany({
-    orderBy: { createdAt: "asc" },
-  })
+  let allProducts: Product[] = []
+  
+  try {
+    allProducts = await db.product.findMany({
+      orderBy: { createdAt: "asc" },
+    })
+  } catch (error) {
+    console.error("Failed to fetch products:", error)
+  }
 
   // Format the products to match components expectations
   const formattedProducts = allProducts.map((product) => ({
@@ -19,7 +26,7 @@ export default async function ShopPage() {
 
   return (
     <div className="w-full bg-background transition-colors duration-300">
-      <CustomCursor />
+      <ClientOnlyCustomCursor />
 
       {/* Hero Section matching Screen 1 */}
       <section className="w-full pt-28 pb-10 px-6 md:px-10">
