@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase"
 import ClientOnlyCustomCursor from "@/components/ClientOnlyCustomCursor"
 import StaggeredProductGrid from "@/components/shop/StaggeredProductGrid"
 import AnimatedAuraTitle from "@/components/shop/AnimatedAuraTitle"
-import Image from "next/image"
+import FeaturedGrid from "@/components/shop/FeaturedGrid"
 import { Product } from "@/types"
 
 export const revalidate = 0 // always fetch fresh database content
@@ -66,68 +66,7 @@ export default async function ShopPage() {
             </div>
           </div>
 
-          {/* 4 cropped images side-by-side representing details */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 border-t border-b border-border/10 divide-x divide-border/10 bg-secondary/20">
-
-            {/* Col 1: Neck Tattoo Cropped Shot */}
-            <div className="relative aspect-[4/5] overflow-hidden group">
-              <Image
-                src="https://images.unsplash.com/photo-1590246814883-57c511e76523?auto=format&fit=crop&w=800&q=80"
-                alt="Neck Tattoo Detail"
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-            </div>
-
-            {/* Col 2: Cap Detail (With absolute embroidered ++ logo overlay) */}
-            <div className="relative aspect-[4/5] overflow-hidden group bg-neutral-900">
-              <Image
-                src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
-                alt="Cap Detail"
-                fill
-                className="object-cover opacity-85 transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-              {/* Custom embroidered ++ overlay on cap front */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span className="text-white text-3xl font-black font-sans tracking-tighter opacity-90 drop-shadow-md select-none bg-black/10 px-2 py-0.5 rounded">
-                  ++
-                </span>
-              </div>
-            </div>
-
-            {/* Col 3: Sweatshirt Detail (With absolute red rectangular badge overlay) */}
-            <div className="relative aspect-[4/5] overflow-hidden group bg-neutral-900">
-              <Image
-                src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80"
-                alt="Sweatshirt Detail"
-                fill
-                className="object-cover opacity-85 transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-              {/* Custom red badge overlay */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none">
-                <div className="bg-red-600 text-white p-2 text-[5px] md:text-[6px] tracking-[0.1em] uppercase font-bold text-center border border-red-500 shadow-lg select-none leading-tight max-w-[120px] w-24">
-                  <div>HELLO HALLO</div>
-                  <div>OUTFIT COLLECTION</div>
-                  <div>NON - WORLD</div>
-                  <div>R90 - S + RETRO</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Col 4: Backpack Detail */}
-            <div className="relative aspect-[4/5] overflow-hidden group">
-              <Image
-                src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
-                alt="Backpack Detail"
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-            </div>
-          </div>
+          <FeaturedGrid />
         </div>
       </section>
 
