@@ -3,6 +3,7 @@ import ClientOnlyCustomCursor from "@/components/ClientOnlyCustomCursor"
 import StaggeredProductGrid from "@/components/shop/StaggeredProductGrid"
 import AnimatedAuraTitle from "@/components/shop/AnimatedAuraTitle"
 import FeaturedGrid from "@/components/shop/FeaturedGrid"
+import PromoBanner from "@/components/shop/PromoBanner"
 import { Product } from "@/types"
 
 export const revalidate = 0 // always fetch fresh database content
@@ -70,27 +71,7 @@ export default async function ShopPage() {
         </div>
       </section>
 
-      {/* Horizontal space banner displaying some items + pricing, matching Screen 4 banner */}
-      <section className="w-full px-6 md:px-10 py-6 overflow-hidden">
-        <div className="w-full flex flex-wrap justify-between items-center text-[10px] md:text-xs tracking-[0.25em] text-muted-foreground uppercase gap-4 border-b border-border/10 pb-6">
-          <div className="flex items-center gap-1.5">
-            <span>OFF BY DESIGN</span>
-            <span className="font-mono text-foreground font-semibold">$33.00</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span>KERNED CONFIDENCE</span>
-            <span className="font-mono text-foreground font-semibold">$25.00</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span>SPECIMEN NO. HH01</span>
-            <span className="font-mono text-foreground font-semibold">$30.00</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span>GRID SYSTEM GO</span>
-            <span className="font-mono text-foreground font-semibold">$30.00</span>
-          </div>
-        </div>
-      </section>
+      <PromoBanner />
 
       {/* Main product listings: Staggered Editorial Grid */}
       <section className="w-full py-10 pb-24 px-6 md:px-10">
