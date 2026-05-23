@@ -6,6 +6,7 @@ import { useCartStore } from "@/store/cartStore"
 import { useThemeStore } from "@/store/themeStore"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import ProfileDropdown from "./ProfileDropdown"
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -46,6 +47,8 @@ export default function Navbar() {
           >
             Bag ({itemCount})
           </Link>
+
+          <ProfileDropdown />
 
           {/* Theme switcher dots */}
           <div className="flex items-center gap-2 ml-2 md:ml-4">
