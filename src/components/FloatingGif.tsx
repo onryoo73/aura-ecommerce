@@ -1,9 +1,23 @@
 "use client"
 
-import { useLayoutEffect, useRef } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import Image from "next/image"
 
+const GIF_URLS = [
+  "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHhkcWN3N3ZxZjhrdzJjMmcwdW5zcnljbzhoMzY4Zmc1aDB5Z3UwayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PyoyQRPyZXYq7mfxxs/giphy.gif",
+  "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmlrZnViMzNheTJpNTk5cjJjMXoyYXZzemYzcDBpNW9hZW45NTRubCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yIxNOXEMpqkqA/giphy.gif",
+  "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGlmaDBwZHltcjVtY3FrZzlkY3Zsc3BjdXU3MjhpNGQ5NndpeGE4bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SJcJxtq3rxpW0Wy4UM/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2VlZjI2OXl3ZTQ5bnAyODdrY2R2eDh0Y3d6anUzaDZkaTFoa2FmYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/A3wb4uEFdeUFrlAFuk/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2VlZjI2OXl3ZTQ5bnAyODdrY2R2eDh0Y3d6anUzaDZkaTFoa2FmYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/mFvaM65uQ6bu0/giphy.gif",
+]
+
+const randomGif = (exclude?: string) => {
+  const options = exclude ? GIF_URLS.filter((url) => url !== exclude) : GIF_URLS
+  return options[Math.floor(Math.random() * options.length)]
+}
+
 export default function FloatingGif() {
+  const [gifUrl, setGifUrl] = useState(() => randomGif())
   const ref = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -46,21 +60,25 @@ export default function FloatingGif() {
         x = vw - ew
         vx = -(3 + Math.random() * 3)
         rotation += 15
+        setGifUrl((current) => randomGif(current))
       }
       if (x <= 0) {
         x = 0
         vx = 3 + Math.random() * 3
         rotation += 15
+        setGifUrl((current) => randomGif(current))
       }
       if (y + eh >= vh) {
         y = vh - eh
         vy = -(3 + Math.random() * 2)
         rotation += 15
+        setGifUrl((current) => randomGif(current))
       }
       if (y <= 0) {
         y = 0
         vy = 3 + Math.random() * 2
         rotation += 15
+        setGifUrl((current) => randomGif(current))
       }
 
       setTransform()
@@ -91,8 +109,8 @@ export default function FloatingGif() {
       style={{ willChange: "transform" }}
     >
       <Image
-        src="https://media.giphy.com/media/jUwpNzg9IcyrK/giphy.gif"
-        alt="Homer Simpson backing into bushes"
+        src={gifUrl}
+        alt="Fun animated gift"
         fill
         className="object-cover scale-110"
         unoptimized
