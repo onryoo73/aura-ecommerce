@@ -9,7 +9,7 @@ export default function BulkUpload() {
   const [file, setFile] = useState<File | null>(null)
   const [dragging, setDragging] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<{ success: boolean; imported: number; errors: number; total: number } | null>(null)
+  const [result, setResult] = useState<{ success: boolean; imported: number; errors: number; total: number; detectedColumns?: string[] } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -126,13 +126,18 @@ export default function BulkUpload() {
             {result && (
               <div className="mt-4 p-4 bg-secondary/30 border border-border text-sm">
                 <div className="flex items-center gap-2 text-foreground font-medium mb-2">
-                  <Check className="w-4 h-4" />
-                  Import complete
+                  {result.errors > 0 ? <AlertCircle className="w-4 h-4 text-destructive" /> : <Check className="w-4 h-4" />}
+                  {result.errors > 0 ? "Import completed with errors" : "Import complete"}
                 </div>
                 <p className="text-muted-foreground">
                   {result.imported} / {result.total} products imported
                   {result.errors > 0 && <span className="text-destructive ml-2">({result.errors} errors)</span>}
                 </p>
+                {result.detectedColumns && (
+                  <p className="text-muted-foreground mt-1">
+                    Detected columns: {result.detectedColumns.join(", ")}
+                  </p>
+                )}
               </div>
             )}
 

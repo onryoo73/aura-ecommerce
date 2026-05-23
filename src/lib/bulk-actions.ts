@@ -5,6 +5,18 @@ import { revalidatePath } from "next/cache"
 import { auth } from "@/auth"
 import * as XLSX from "xlsx"
 
+function findColumn(rows: Record<string, string>[], keys: string[]): string | undefined {
+  for (const row of rows) {
+    for (const ek of Object.keys(row)) {
+      const normalized = ek.trim().toLowerCase().replace(/[\s_-]+/g, "")
+      if (keys.some(k => normalized === k.toLowerCase().replace(/[\s_-]+/g, ""))) {
+        return ek
+      }
+    }
+  }
+  return undefined
+}
+
 export async function bulkAddProducts(formData: FormData) {
   const session = await auth()
   if (!session?.user?.isAdmin) {
@@ -25,36 +37,46 @@ export async function bulkAddProducts(formData: FormData) {
     return { error: "Excel file is empty" }
   }
 
+  const detectedColumns = Object.keys(rows[0])
+
+  const nameCol = findColumn(rows, ["name", "productname", "product name", "product_name", "item", "title"])
+  const descCol = findColumn(rows, ["description", "desc", "productdescription", "product description"])
+  const priceCol = findColumn(rows, ["price", "regularprice", "regular price", "amount", "cost", "unitprice"])
+  const imageCol = findColumn(rows, ["image", "images", "img", "imageurl", "image_url", "url", "photo", "picture"])
+  const catCol = findColumn(rows, ["category", "categories", "cat", "productcategory", "type", "department"])
+  const stockCol = findColumn(rows, ["stock", "quantity", "qty", "inventory", "units", "count"])
+
   let imported = 0
   let errors = 0
+  const errorDetails: string[] = []
 
   for (const row of rows) {
-    const name = row["name"] || row["Name"] || row["NAME"]
-    const description = row["description"] || row["Description"] || row["DESCRIPTION"]
-    const priceRaw = row["price"] || row["Price"] || row["PRICE"]
-    const image = row["image"] || row["Image"] || row["IMAGE"] || row["img"] || row["url"]
-    const category = row["category"] || row["Category"] || row["CATEGORY"]
-    const stockRaw = row["stock"] || row["Stock"] || row["STOCK"]
+    const name = nameCol ? String(row[nameCol] || "").trim() : ""
+    const description = descCol ? String(row[descCol] || "").trim() : ""
+    const priceRaw = priceCol ? String(row[priceCol] || "").trim() : ""
+    const image = imageCol ? String(row[imageCol] || "").trim() : ""
+    const category = catCol ? String(row[catCol] || "").trim() : ""
+    const stockRaw = stockCol ? String(row[stockCol] || "").trim() : ""
 
-    if (!name || !priceRaw) {
+    if (!name) {
       errors++
       continue
     }
 
-    const price = Math.round(parseFloat(String(priceRaw).replace(/[^0-9.]/g, "")) * 100)
-    const stock = parseInt(String(stockRaw || "0").replace(/[^0-9]/g, "")) || 0
-
-    if (!price) {
+    const priceCents = Math.round(parseFloat(priceRaw.replace(/[^0-9.]/g, "")) * 100)
+    if (!priceCents && priceCents !== 0) {
       errors++
       continue
     }
+
+    const stock = parseInt(stockRaw.replace(/[^0-9]/g, "")) || 0
 
     const { error } = await supabase.from("products").insert({
-      name,
-      description: description || "",
-      price,
-      image: image || "",
-      category: category || "Other",
+      name: name.slice(0, 255),
+      description: description.slice(0, 2000),
+      price: priceCents,
+      image: image.slice(0, 500),
+      category: category.slice(0, 100) || "Other",
       stock,
     })
 
@@ -72,5 +94,6 @@ export async function bulkAddProducts(formData: FormData) {
     imported,
     errors,
     total: rows.length,
+    detectedColumns,
   }
 }
