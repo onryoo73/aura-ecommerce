@@ -3,11 +3,10 @@
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice } from "@/lib/utils";
 import CartItem from "@/components/shop/CartItem";
+import FloatingGif from "@/components/FloatingGif";
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function CartPage() {
   const { items, getTotal } = useCartStore();
@@ -59,15 +58,7 @@ export default function CartPage() {
           </div>
 
           {/* Animated Homer Simpson in bushes circle sticker */}
-          <div className="absolute right-0 bottom-0 md:right-10 md:bottom-10 z-20 w-36 h-36 md:w-56 md:h-56 rounded-full border border-border/40 overflow-hidden shadow-2xl bg-black select-none pointer-events-none">
-            <Image
-              src="https://media.giphy.com/media/jUwpNzg9IcyrK/giphy.gif"
-              alt="Homer Simpson backing into bushes"
-              fill
-              className="object-cover scale-110"
-              unoptimized
-            />
-          </div>
+          <FloatingGif />
         </div>
       </div>
     );
