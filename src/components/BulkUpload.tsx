@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { Upload, FileSpreadsheet, X, Check, AlertCircle } from "lucide-react"
 import { bulkAddProducts } from "@/lib/bulk-actions"
 
@@ -11,6 +12,7 @@ export default function BulkUpload() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ success: boolean; imported: number; errors: number; total: number; detectedColumns?: string[] } | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleDrop = (e: React.DragEvent) => {
@@ -57,6 +59,7 @@ export default function BulkUpload() {
     } else {
       setResult(res as any)
       setFile(null)
+      router.refresh()
     }
   }
 

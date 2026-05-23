@@ -60,12 +60,14 @@ export async function bulkAddProducts(formData: FormData) {
 
     if (!name) {
       errors++
+      errorDetails.push("Missing name")
       continue
     }
 
     const priceCents = Math.round(parseFloat(priceRaw.replace(/[^0-9.]/g, "")) * 100)
     if (!priceCents && priceCents !== 0) {
       errors++
+      errorDetails.push(`Invalid price: "${priceRaw}"`)
       continue
     }
 
@@ -82,6 +84,7 @@ export async function bulkAddProducts(formData: FormData) {
 
     if (error) {
       errors++
+      errorDetails.push(error.message)
     } else {
       imported++
     }
