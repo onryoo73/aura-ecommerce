@@ -82,3 +82,51 @@ export async function updateOrderStatus(formData: FormData) {
 
   revalidatePath("/admin/orders");
 }
+
+export async function addPromoItem(formData: FormData) {
+  await checkAdmin();
+
+  const name = formData.get("name") as string;
+  const priceDollars = parseFloat(formData.get("price") as string) || 0;
+  const sortOrder = parseInt(formData.get("sort_order") as string) || 0;
+
+  await supabase.from("promo_banner").insert({
+    name,
+    price: Math.round(priceDollars * 100),
+    sort_order: sortOrder,
+  });
+
+  revalidatePath("/admin/promo");
+  revalidatePath("/");
+}
+
+export async function deletePromoItem(id: string) {
+  await checkAdmin();
+
+  await supabase.from("promo_banner").delete().eq("id", id);
+
+  revalidatePath("/admin/promo");
+  revalidatePath("/");
+}
+
+export async function updatePromoItem(id: string, formData: FormData) {
+  await checkAdmin();
+
+  const name = formData.get("name") as string;
+  const priceDollars = parseFloat(formData.get("price") as string) || 0;
+  const sortOrder = parseInt(formData.get("sort_order") as string) || 0;
+  const active = formData.get("active") === "on";
+
+  await supabase
+    .from("promo_banner")
+    .update({
+      name,
+      price: Math.round(priceDollars * 100),
+      sort_order: sortOrder,
+      active,
+    })
+    .eq("id", id);
+
+  revalidatePath("/admin/promo");
+  revalidatePath("/");
+}

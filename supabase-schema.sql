@@ -71,9 +71,21 @@ CREATE TABLE IF NOT EXISTS order_items (
   price INT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS promo_banner (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  name TEXT NOT NULL,
+  price INT NOT NULL DEFAULT 0,
+  sort_order INT NOT NULL DEFAULT 0,
+  active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT now()
+);
+
 -- Enable RLS (Row Level Security) for public reads on products
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Products are publicly readable" ON products FOR SELECT USING (true);
+
+ALTER TABLE promo_banner ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Promo banner is publicly readable" ON promo_banner FOR SELECT USING (true);
 
 -- Seed admin user (password: Admin123!)
 INSERT INTO users (email, name, password, is_admin)

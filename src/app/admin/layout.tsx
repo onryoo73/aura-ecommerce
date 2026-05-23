@@ -31,6 +31,12 @@ export default async function AdminLayout({
             Orders
           </Link>
           <Link
+            href="/admin/promo"
+            className="block px-4 py-2.5 text-sm hover:bg-secondary transition-colors"
+          >
+            Promo Banner
+          </Link>
+          <Link
             href="/"
             className="block px-4 py-2.5 text-sm text-muted-foreground hover:bg-secondary transition-colors mt-8"
           >

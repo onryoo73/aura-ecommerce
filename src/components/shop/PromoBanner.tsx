@@ -8,20 +8,22 @@ import { formatPrice } from "@/lib/utils"
 interface PromoItem {
   name: string
   price: number
+  active: boolean
 }
 
 export default function PromoBanner() {
   const [items, setItems] = useState<PromoItem[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<HTMLDivElement[]>([])
 
   useEffect(() => {
     supabase
-      .from("products")
-      .select("name, price")
-      .order("created_at", { ascending: false })
-      .limit(4)
+      .from("promo_banner")
+      .select("name, price, active")
+      .eq("active", true)
+      .order("sort_order", { ascending: true })
       .then(({ data }) => {
-        if (data) setItems(data as PromoItem[])
+        if (data && data.length > 0) setItems(data as PromoItem[])
       })
   }, [])
 
@@ -34,19 +36,15 @@ export default function PromoBanner() {
     )
   }, [items])
 
-  const fallback: PromoItem[] = [
-    { name: "NEW ARRIVALS", price: 0 },
-    { name: "LIMITED EDITION", price: 0 },
-    { name: "EXCLUSIVE DROP", price: 0 },
-    { name: "SIGNATURE LINE", price: 0 },
-  ]
-
-  const display = items.length > 0 ? items : fallback
+  if (items.length === 0) return null
 
   return (
     <section className="w-full px-6 md:px-10 py-6 overflow-hidden">
-      <div className="w-full flex flex-wrap justify-between items-center text-[10px] md:text-xs tracking-[0.25em] text-muted-foreground uppercase gap-4 border-b border-border/10 pb-6">
-        {display.map((item, i) => (
+      <div
+        ref={containerRef}
+        className="w-full flex flex-wrap justify-between items-center text-[10px] md:text-xs tracking-[0.25em] text-muted-foreground uppercase gap-4 border-b border-border/10 pb-6"
+      >
+        {items.map((item, i) => (
           <div
             key={i}
             ref={(el) => { if (el) itemsRef.current[i] = el }}
