@@ -14,6 +14,8 @@ export default function Navbar() {
   const { theme, setTheme } = useThemeStore()
   const [mounted, setMounted] = useState(false)
 
+  if (pathname.startsWith("/admin")) return null
+
   useEffect(() => {
     setMounted(true)
   }, [])
