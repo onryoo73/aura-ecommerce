@@ -24,23 +24,23 @@ export default async function AdminProductsPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
+      <div className="bg-card border border-border overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-secondary/20 border-b border-border">
-              <th className="p-4 font-semibold text-sm">Product</th>
-              <th className="p-4 font-semibold text-sm">Category</th>
-              <th className="p-4 font-semibold text-sm">Price</th>
-              <th className="p-4 font-semibold text-sm">Stock</th>
-              <th className="p-4 font-semibold text-sm text-right">Actions</th>
+            <tr className="bg-secondary/30 border-b border-border">
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Product</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Category</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Price</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Stock</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px] text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-y divide-border/50">
             {(products || []).map((product) => (
-              <tr key={product.id} className="hover:bg-secondary/5 transition-colors">
+              <tr key={product.id} className="hover:bg-secondary/10 transition-colors">
                 <td className="p-4">
                   <div className="flex items-center">
-                    <div className="h-12 w-12 relative flex-shrink-0 rounded-md overflow-hidden border border-border mr-4">
+                    <div className="h-12 w-12 relative flex-shrink-0 rounded overflow-hidden border border-border/50 mr-4 bg-secondary">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -48,7 +48,7 @@ export default async function AdminProductsPage() {
                         className="object-cover"
                       />
                     </div>
-                    <span className="font-medium">{product.name}</span>
+                    <span className="font-medium text-sm">{product.name}</span>
                   </div>
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">
@@ -58,21 +58,21 @@ export default async function AdminProductsPage() {
                   {formatPrice(product.price)}
                 </td>
                 <td className="p-4 text-sm">
-                  <span className={product.stock < 10 ? "text-red-600 font-bold" : ""}>
+                  <span className={product.stock < 10 ? "text-destructive font-bold" : ""}>
                     {product.stock}
                   </span>
                 </td>
                 <td className="p-4 text-right">
-                  <div className="flex justify-end space-x-2">
+                  <div className="flex justify-end gap-1">
                     <Link
                       href={`/admin/products/edit/${product.id}`}
-                      className="p-2 hover:bg-secondary rounded-full transition-colors"
+                      className="p-2 hover:bg-secondary rounded transition-colors"
                     >
                       <Edit className="w-4 h-4 text-muted-foreground" />
                     </Link>
                     <form action={deleteProduct.bind(null, product.id)}>
-                      <button className="p-2 hover:bg-red-50 rounded-full transition-colors">
-                        <Trash2 className="w-4 h-4 text-red-600" />
+                      <button className="p-2 hover:bg-secondary rounded transition-colors">
+                        <Trash2 className="w-4 h-4 text-destructive" />
                       </button>
                     </form>
                   </div>

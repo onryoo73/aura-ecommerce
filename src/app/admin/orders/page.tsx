@@ -12,21 +12,21 @@ export default async function AdminOrdersPage() {
     <div>
       <h1 className="text-3xl font-bold tracking-tight mb-8">Manage Orders</h1>
 
-      <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
+      <div className="bg-card border border-border overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-secondary/20 border-b border-border">
-              <th className="p-4 font-semibold text-sm">Order ID</th>
-              <th className="p-4 font-semibold text-sm">Customer</th>
-              <th className="p-4 font-semibold text-sm">Total</th>
-              <th className="p-4 font-semibold text-sm">Status</th>
-              <th className="p-4 font-semibold text-sm">Date</th>
+            <tr className="bg-secondary/30 border-b border-border">
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Order ID</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Customer</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Total</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Status</th>
+              <th className="p-4 font-semibold text-sm text-muted-foreground tracking-wider uppercase text-[10px]">Date</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-y divide-border/50">
             {(orders || []).map((order: any) => (
-              <tr key={order.id} className="hover:bg-secondary/5 transition-colors">
-                <td className="p-4 font-mono text-sm">
+              <tr key={order.id} className="hover:bg-secondary/10 transition-colors">
+                <td className="p-4 font-mono text-sm text-muted-foreground">
                   {order.id.slice(0, 8)}
                 </td>
                 <td className="p-4 text-sm">
@@ -41,7 +41,7 @@ export default async function AdminOrdersPage() {
                     <select
                       name="status"
                       defaultValue={order.status}
-                      className="px-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                      className="px-3 py-1.5 bg-secondary border border-border text-foreground text-sm focus:outline-none focus:border-foreground/30 transition-colors"
                       onChange={(e) => e.target.form?.requestSubmit()}
                     >
                       <option value="PENDING">Pending</option>
@@ -52,7 +52,7 @@ export default async function AdminOrdersPage() {
                   </form>
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">
-                  {new Date(order.createdAt).toLocaleDateString("en-US", {
+                  {new Date(order.created_at || order.createdAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
