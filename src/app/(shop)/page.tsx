@@ -13,17 +13,16 @@ export default async function ShopPage() {
     const { data } = await supabase
       .from("products")
       .select("*")
-      .order("createdAt", { ascending: true })
+      .order("created_at", { ascending: true })
     allProducts = (data as Product[]) || []
   } catch (error) {
     console.error("Failed to fetch products:", error)
   }
 
-  // Format the products to match components expectations
-  const formattedProducts = allProducts.map((product) => ({
+  const formattedProducts = allProducts.map((product: any) => ({
     ...product,
-    createdAt: new Date(product.createdAt),
-    updatedAt: new Date(product.updatedAt),
+    createdAt: new Date(product.created_at || product.createdAt),
+    updatedAt: new Date(product.updated_at || product.updatedAt),
   }))
 
   return (
