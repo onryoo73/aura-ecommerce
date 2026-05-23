@@ -12,16 +12,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
-        const { data: user } = await supabase
+        const { data: user, error } = await supabase
           .from("users")
           .select("*")
           .eq("email", credentials.email as string)
           .single()
 
-        if (!user || !user.password) return null
+        if (error || !user) return null
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
@@ -35,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           image: user.image,
-          isAdmin: user.isAdmin,
+          isAdmin: user.is_admin,
         }
       },
     }),
