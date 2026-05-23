@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Product } from "@/types";
 import ProductCard from "./ProductCard";
 
@@ -26,21 +27,35 @@ export default function StaggeredProductGrid({ products }: StaggeredProductGridP
     else col3.push(product);
   });
 
+  function CardWrapper({ product, idx }: { product: Product; idx: number }) {
+    const direction = idx % 2 === 0 ? -120 : 120
+    return (
+      <motion.div
+        initial={{ x: direction, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+        <ProductCard key={product.id} product={product} index={idx} />
+      </motion.div>
+    )
+  }
+
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 lg:gap-24">
       <div className="flex flex-col gap-16 md:gap-20">
         {col1.map((product, idx) => (
-          <ProductCard key={product.id} product={product} index={idx * 3} />
+          <CardWrapper key={product.id} product={product} idx={idx * 3} />
         ))}
       </div>
       <div className="flex flex-col gap-16 md:gap-20 md:pt-32">
         {col2.map((product, idx) => (
-          <ProductCard key={product.id} product={product} index={idx * 3 + 1} />
+          <CardWrapper key={product.id} product={product} idx={idx * 3 + 1} />
         ))}
       </div>
       <div className="flex flex-col gap-16 md:gap-20 md:pt-64">
         {col3.map((product, idx) => (
-          <ProductCard key={product.id} product={product} index={idx * 3 + 2} />
+          <CardWrapper key={product.id} product={product} idx={idx * 3 + 2} />
         ))}
       </div>
     </div>

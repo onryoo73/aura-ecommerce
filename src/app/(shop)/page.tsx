@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase"
 import ClientOnlyCustomCursor from "@/components/ClientOnlyCustomCursor"
 import StaggeredProductGrid from "@/components/shop/StaggeredProductGrid"
+import AnimatedAuraTitle from "@/components/shop/AnimatedAuraTitle"
 import Image from "next/image"
 import { Product } from "@/types"
 
@@ -34,15 +35,7 @@ export default async function ShopPage() {
         <div className="w-full">
           {/* Giant AURA Header with Circled R */}
           <div className="relative w-full select-none font-outfit mt-4">
-            <div className="flex items-end justify-between relative border-b border-foreground/15 pb-2">
-              <h1 className="text-[28vw] font-black tracking-[-0.04em] leading-[0.85] text-foreground uppercase">
-                AURA
-              </h1>
-              {/* Circular Registered Trademark Logo */}
-              <div className="flex-shrink-0 text-xs md:text-2xl border-2 border-foreground rounded-full w-6 h-6 md:w-12 md:h-12 lg:w-16 lg:h-16 flex items-center justify-center font-bold font-sans mb-2 md:mb-4 mr-1 select-none bg-foreground text-background">
-                R
-              </div>
-            </div>
+            <AnimatedAuraTitle />
           </div>
 
           {/* Info bar: 4 Columns */}
