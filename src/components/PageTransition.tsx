@@ -17,17 +17,17 @@ export default function PageTransition({ children }: { children: React.ReactNode
       .set(overlayRef.current, { yPercent: 0 })
       .fromTo(
         lettersRef.current,
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out" }
+        { y: 80, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.12, ease: "power3.out" }
       )
       .to(
         lettersRef.current,
-        { y: -50, opacity: 0, duration: 0.4, stagger: 0.06, ease: "power2.in" },
-        "+=0.4"
+        { y: -60, opacity: 0, duration: 0.5, stagger: 0.08, ease: "power2.in" },
+        "+=0.6"
       )
       .to(
         overlayRef.current,
-        { yPercent: -100, duration: 0.8, ease: "power4.inOut" },
+        { yPercent: -100, duration: 0.9, ease: "power4.inOut" },
         "-=0.3"
       )
 
@@ -49,9 +49,9 @@ export default function PageTransition({ children }: { children: React.ReactNode
     <>
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-[9998] bg-black flex items-center justify-center pointer-events-none"
+        className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
       >
-        <div className="flex gap-2 md:gap-3 overflow-hidden">
+        <div className="flex gap-2 md:gap-4 overflow-hidden">
           {"AURA".split("").map((letter, i) => (
             <span
               key={i}
