@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.variable, outfit.variable, "font-sans min-h-screen antialiased flex flex-col bg-background text-foreground transition-colors duration-300 selection:bg-accent selection:text-background")}>
+      <body className={cn(inter.variable, outfit.variable, "font-sans min-h-screen antialiased flex flex-col overflow-x-hidden bg-background text-foreground transition-colors duration-300 selection:bg-accent selection:text-background")}>
         <LoadingIntro />
         <LenisScroll />
         <Providers>

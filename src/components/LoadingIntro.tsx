@@ -1,11 +1,17 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { usePathname } from "next/navigation"
 import gsap from "gsap"
 
 export default function LoadingIntro() {
+  const pathname = usePathname()
   const overlayRef = useRef<HTMLDivElement>(null)
   const lettersRef = useRef<HTMLSpanElement[]>([])
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/account")) {
+    return null
+  }
 
   useEffect(() => {
     const timeline = gsap.timeline()

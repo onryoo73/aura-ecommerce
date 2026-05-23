@@ -34,7 +34,7 @@ export default function CartPage() {
       <div className="w-full min-h-[85vh] flex flex-col bg-background pt-24 px-6 md:px-10 pb-20 transition-colors duration-300">
         {/* Giant YOUR BAG Header */}
         <div className="w-full select-none font-outfit mt-4 border-b border-foreground/15 pb-4">
-          <h1 className="text-[17vw] font-black tracking-[-0.04em] leading-[0.8] text-foreground uppercase">
+          <h1 className="text-[12vw] md:text-[17vw] font-black tracking-[-0.04em] leading-[0.8] text-foreground uppercase">
             YOUR BAG
           </h1>
         </div>
@@ -42,7 +42,7 @@ export default function CartPage() {
         {/* Empty state message and Homer Simpson GIF */}
         <div className="relative flex-grow flex flex-col justify-center mt-12 md:mt-20">
           <div className="relative z-10">
-            <h2 className="text-[9vw] font-black tracking-[-0.03em] leading-[0.85] text-foreground font-outfit uppercase select-none max-w-[80vw]">
+            <h2 className="text-[7vw] md:text-[9vw] font-black tracking-[-0.03em] leading-[0.85] text-foreground font-outfit uppercase select-none max-w-[90vw] md:max-w-[80vw]">
               Not even one thing?
               <br />
               <span className="opacity-40 select-none">That's sad.</span>
@@ -69,7 +69,7 @@ export default function CartPage() {
     <div className="w-full min-h-screen bg-background pt-24 px-6 md:px-10 pb-24 transition-colors duration-300">
       {/* Giant YOUR BAG Header */}
       <div className="w-full select-none font-outfit mt-4 border-b border-foreground/15 pb-4">
-        <h1 className="text-[17vw] font-black tracking-[-0.04em] leading-[0.8] text-foreground uppercase">
+        <h1 className="text-[12vw] md:text-[17vw] font-black tracking-[-0.04em] leading-[0.8] text-foreground uppercase">
           YOUR BAG
         </h1>
       </div>

@@ -105,7 +105,7 @@ export default function FloatingGif() {
   return (
     <div
       ref={ref}
-      className="fixed top-0 left-0 z-50 w-36 h-36 md:w-56 md:h-56 rounded-full border-2 border-border/40 overflow-hidden shadow-2xl bg-black select-none pointer-events-none"
+      className="fixed top-0 left-0 z-50 w-28 h-28 sm:w-36 sm:h-36 md:w-56 md:h-56 rounded-full border-2 border-border/40 overflow-hidden shadow-2xl bg-black select-none pointer-events-none"
       style={{ willChange: "transform" }}
     >
       <Image
