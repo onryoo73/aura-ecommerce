@@ -1,9 +1,36 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import { motion } from "framer-motion"
+import gsap from "gsap"
 
 export default function AnimatedAuraTitle() {
   const letters = "AURA".split("")
+  const rRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = rRef.current
+    if (!el) return
+
+    const bounds = { x: [-80, 80], y: [-60, 60] }
+
+    const move = () => {
+      gsap.to(el, {
+        x: (Math.random() * 2 - 1) * 80,
+        y: (Math.random() * 2 - 1) * 60,
+        rotate: Math.random() * 20 - 10,
+        duration: 2 + Math.random() * 2,
+        ease: "sine.inOut",
+        onComplete: move,
+      })
+    }
+
+    const timeout = setTimeout(move, 800)
+    return () => {
+      clearTimeout(timeout)
+      gsap.killTweensOf(el)
+    }
+  }, [])
 
   return (
     <motion.div
@@ -34,6 +61,7 @@ export default function AnimatedAuraTitle() {
         ))}
       </h1>
       <motion.div
+        ref={rRef}
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.6, ease: [1.7, 0.1, 0.1, 1] }}
