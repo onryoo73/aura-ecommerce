@@ -14,6 +14,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
     const timeline = gsap.timeline()
 
     timeline
+      .set(overlayRef.current, { yPercent: 0 })
       .fromTo(
         lettersRef.current,
         { y: 60, opacity: 0 },
