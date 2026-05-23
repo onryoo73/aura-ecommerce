@@ -41,9 +41,14 @@ export default function RootLayout({
               </div>
 
               <div className="space-y-6 text-sm text-muted-foreground">
-                <p className="text-[11px] uppercase tracking-[0.35em] text-foreground font-bold">
-                  Made to be worn.
-                </p>
+                <div className="space-y-1">
+                  <p className="text-[11px] uppercase tracking-[0.35em] text-foreground font-bold">
+                    Made to be worn.
+                  </p>
+                  <p className="text-[11px] uppercase tracking-[0.35em] text-muted-foreground font-bold">
+                    Or judged. Or both.
+                  </p>
+                </div>
                 <p>
                   Created by the ++hellohello team, this store and signature collection celebrates our collective creativity and passion for apparel. Carefully designed.
                 </p>
@@ -80,7 +85,7 @@ export default function RootLayout({
                   <li className="font-semibold uppercase tracking-[0.35em] text-[10px] text-foreground">Contact</li>
                   <li>Let's talk</li>
                   <li className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">Email</li>
-                  <li>hello@hellohello.com</li>
+                  <li>aura@aura.com</li>
                 </ul>
               </div>
             </div>
