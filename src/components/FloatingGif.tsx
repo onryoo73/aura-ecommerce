@@ -31,9 +31,14 @@ export default function FloatingGif() {
     let rotation = 0
     let raf: number
 
+    const getViewport = () => {
+      const vw = document.documentElement.clientWidth || window.innerWidth
+      const vh = document.documentElement.clientHeight || window.innerHeight
+      return { vw, vh }
+    }
+
     const clampPosition = () => {
-      const vw = window.innerWidth
-      const vh = window.innerHeight
+      const { vw, vh } = getViewport()
       const ew = el.offsetWidth
       const eh = el.offsetHeight
 
@@ -48,8 +53,7 @@ export default function FloatingGif() {
     }
 
     const animate = () => {
-      const vw = window.innerWidth
-      const vh = window.innerHeight
+      const { vw, vh } = getViewport()
       const ew = el.offsetWidth
       const eh = el.offsetHeight
 
