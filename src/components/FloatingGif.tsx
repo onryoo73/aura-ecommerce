@@ -1,24 +1,17 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
-import { createPortal } from "react-dom"
+import { useLayoutEffect, useRef } from "react"
 import Image from "next/image"
 
 export default function FloatingGif() {
-  const [mounted, setMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const portalRoot = useMemo(() => typeof document !== "undefined" ? document.body : null, [])
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
 
-    let x = 20
-    let y = 20
+    let x = 80
+    let y = 80
     let vx = 4 + Math.random() * 3
     let vy = 3 + Math.random() * 2
     let rotation = 0
@@ -34,6 +27,10 @@ export default function FloatingGif() {
       if (x < 0) x = 0
       if (y + eh > vh) y = vh - eh
       if (y < 0) y = 0
+    }
+
+    const setTransform = () => {
+      el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`
     }
 
     const animate = () => {
@@ -66,15 +63,17 @@ export default function FloatingGif() {
         rotation += 15
       }
 
-      el.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`
+      setTransform()
       raf = requestAnimationFrame(animate)
     }
 
     clampPosition()
+    setTransform()
     raf = requestAnimationFrame(animate)
 
     const handleResize = () => {
       clampPosition()
+      setTransform()
     }
 
     window.addEventListener("resize", handleResize)
@@ -85,11 +84,7 @@ export default function FloatingGif() {
     }
   }, [])
 
-  if (!mounted || !portalRoot) {
-    return null
-  }
-
-  return createPortal(
+  return (
     <div
       ref={ref}
       className="fixed top-0 left-0 z-50 w-36 h-36 md:w-56 md:h-56 rounded-full border-2 border-border/40 overflow-hidden shadow-2xl bg-black select-none pointer-events-none"
@@ -102,7 +97,6 @@ export default function FloatingGif() {
         className="object-cover scale-110"
         unoptimized
       />
-    </div>,
-    portalRoot
+    </div>
   )
 }
