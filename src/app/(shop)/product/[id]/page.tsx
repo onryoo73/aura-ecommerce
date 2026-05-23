@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { formatPrice } from "@/lib/utils";
@@ -16,24 +16,23 @@ interface ProductPageProps {
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
   
-  const product = await db.product.findUnique({
-    where: { id },
-  });
+  const { data: product } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (!product) {
     notFound();
   }
 
-  // Get related products from same category
-  const relatedProducts = await db.product.findMany({
-    where: {
-      category: product.category,
-      id: { not: product.id },
-    },
-    take: 4,
-  });
+  const { data: relatedProducts } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category", product.category)
+    .neq("id", product.id)
+    .limit(4);
 
-  // Convert Prisma product to our Product type (handle dates)
   const formattedProduct = {
     ...product,
     createdAt: new Date(product.createdAt),
@@ -129,7 +128,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {/* Related Products Section */}
-      {relatedProducts.length > 0 && (
+      {relatedProducts && relatedProducts.length > 0 && (
         <section className="w-full px-6 md:px-10 py-20 border-t border-border/10">
           <h2 className="text-2xl font-bold text-foreground mb-12">Related Products</h2>
           <RelatedProducts products={relatedProducts} />

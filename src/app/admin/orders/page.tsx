@@ -1,19 +1,12 @@
-import db from "@/lib/db"
+import { supabase } from "@/lib/supabase"
 import { formatPrice } from "@/lib/utils"
 import { updateOrderStatus } from "@/lib/admin-actions"
 
 export default async function AdminOrdersPage() {
-  const orders = await db.order.findMany({
-    include: {
-      user: true,
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  })
+  const { data: orders } = await supabase
+    .from("orders")
+    .select("*, user:users(*), items:order_items(*, product:products(*))")
+    .order("createdAt", { ascending: false })
 
   return (
     <div>
@@ -31,13 +24,13 @@ export default async function AdminOrdersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {orders.map((order) => (
+            {(orders || []).map((order: any) => (
               <tr key={order.id} className="hover:bg-secondary/5 transition-colors">
                 <td className="p-4 font-mono text-sm">
                   {order.id.slice(0, 8)}
                 </td>
                 <td className="p-4 text-sm">
-                  {order.user.email}
+                  {order.user?.email || "N/A"}
                 </td>
                 <td className="p-4 text-sm font-medium">
                   {formatPrice(order.total)}
@@ -71,7 +64,7 @@ export default async function AdminOrdersPage() {
         </table>
       </div>
 
-      {orders.length === 0 && (
+      {(!orders || orders.length === 0) && (
         <div className="text-center py-12 text-muted-foreground">
           No orders found
         </div>

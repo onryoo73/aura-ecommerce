@@ -1,4 +1,4 @@
-import db from "@/lib/db"
+import { supabase } from "@/lib/supabase"
 import ClientOnlyCustomCursor from "@/components/ClientOnlyCustomCursor"
 import StaggeredProductGrid from "@/components/shop/StaggeredProductGrid"
 import Image from "next/image"
@@ -8,11 +8,13 @@ export const revalidate = 0 // always fetch fresh database content
 
 export default async function ShopPage() {
   let allProducts: Product[] = []
-  
+
   try {
-    allProducts = await db.product.findMany({
-      orderBy: { createdAt: "asc" },
-    })
+    const { data } = await supabase
+      .from("products")
+      .select("*")
+      .order("createdAt", { ascending: true })
+    allProducts = (data as Product[]) || []
   } catch (error) {
     console.error("Failed to fetch products:", error)
   }

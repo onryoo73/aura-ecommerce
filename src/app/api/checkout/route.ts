@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { auth } from "@/auth";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
   try {
@@ -16,12 +16,13 @@ export async function POST(req: Request) {
       return new NextResponse("No items in cart", { status: 400 });
     }
 
-    // Calculate total
     let total = 0;
     for (const item of items) {
-      const product = await db.product.findUnique({
-        where: { id: item.id },
-      });
+      const { data: product } = await supabase
+        .from("products")
+        .select("price")
+        .eq("id", item.id)
+        .single();
       if (product) {
         total += product.price * item.quantity;
       }

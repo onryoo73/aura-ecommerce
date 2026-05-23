@@ -1,4 +1,4 @@
-import db from "@/lib/db"
+import { supabase } from "@/lib/supabase"
 import { updateProduct } from "@/lib/admin-actions"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
@@ -10,9 +10,11 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const product = await db.product.findUnique({
-    where: { id },
-  })
+  const { data: product } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single()
 
   if (!product) {
     notFound()

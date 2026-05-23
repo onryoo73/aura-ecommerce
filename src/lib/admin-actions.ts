@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -15,9 +15,7 @@ async function checkAdmin() {
 export async function deleteProduct(id: string) {
   await checkAdmin();
 
-  await db.product.delete({
-    where: { id },
-  });
+  await supabase.from("products").delete().eq("id", id);
 
   revalidatePath("/admin/products");
 }
@@ -32,15 +30,13 @@ export async function addProduct(formData: FormData) {
   const category = formData.get("category") as string;
   const stock = parseInt(formData.get("stock") as string);
 
-  await db.product.create({
-    data: {
-      name,
-      description,
-      price: Math.round(priceDollars * 100),
-      image,
-      category,
-      stock,
-    },
+  await supabase.from("products").insert({
+    name,
+    description,
+    price: Math.round(priceDollars * 100),
+    image,
+    category,
+    stock,
   });
 
   revalidatePath("/admin/products");
@@ -58,17 +54,17 @@ export async function updateProduct(id: string, formData: FormData) {
   const category = formData.get("category") as string;
   const stock = parseInt(formData.get("stock") as string);
 
-  await db.product.update({
-    where: { id },
-    data: {
+  await supabase
+    .from("products")
+    .update({
       name,
       description,
       price: Math.round(priceDollars * 100),
       image,
       category,
       stock,
-    },
-  });
+    })
+    .eq("id", id);
 
   revalidatePath("/admin/products");
   revalidatePath(`/product/${id}`);
@@ -82,10 +78,7 @@ export async function updateOrderStatus(formData: FormData) {
   const id = formData.get("id") as string;
   const status = formData.get("status") as string;
 
-  await db.order.update({
-    where: { id },
-    data: { status },
-  });
+  await supabase.from("orders").update({ status }).eq("id", id);
 
   revalidatePath("/admin/orders");
 }

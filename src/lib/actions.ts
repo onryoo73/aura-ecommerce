@@ -1,8 +1,7 @@
 "use server";
 
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import bcrypt from "bcryptjs";
-import { revalidatePath } from "next/cache";
 
 export async function registerUser(formData: FormData) {
   const name = formData.get("name") as string;
@@ -13,9 +12,11 @@ export async function registerUser(formData: FormData) {
     return { error: "Missing fields" };
   }
 
-  const existingUser = await db.user.findUnique({
-    where: { email },
-  });
+  const { data: existingUser } = await supabase
+    .from("users")
+    .select("id")
+    .eq("email", email)
+    .single();
 
   if (existingUser) {
     return { error: "Email already exists" };
@@ -23,12 +24,10 @@ export async function registerUser(formData: FormData) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await db.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
+  await supabase.from("users").insert({
+    name,
+    email,
+    password: hashedPassword,
   });
 
   return { success: true };

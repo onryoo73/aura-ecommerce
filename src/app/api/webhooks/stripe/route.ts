@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -25,31 +25,37 @@ export async function POST(req: Request) {
     const userId = session.metadata.userId;
     const productIds = JSON.parse(session.metadata.productIds);
 
-    // Get cart items from metadata (simplified here)
-    // In a real app, you'd probably pass more detailed info or fetch from a temp storage
-    
-    // Create order
-    const order = await db.order.create({
-      data: {
+    const { data: order } = await supabase
+      .from("orders")
+      .insert({
         userId,
         total: session.amount,
         status: "PAID",
-        items: {
-          create: productIds.map((productId: string) => ({
-            productId,
-            quantity: 1, // simplified
-            price: 0, // should be real price
-          })),
-        },
-      },
-    });
+      })
+      .select("id")
+      .single();
 
-    // Reduce stock
-    for (const productId of productIds) {
-      await db.product.update({
-        where: { id: productId },
-        data: { stock: { decrement: 1 } },
-      });
+    if (order) {
+      for (const productId of productIds) {
+        await supabase.from("order_items").insert({
+          orderId: order.id,
+          productId,
+          quantity: 1,
+          price: 0,
+        });
+
+        const { data: product } = await supabase
+          .from("products")
+          .select("stock")
+          .eq("id", productId)
+          .single();
+        if (product) {
+          await supabase
+            .from("products")
+            .update({ stock: product.stock - 1 })
+            .eq("id", productId);
+        }
+      }
     }
   }
 

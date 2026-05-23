@@ -1,4 +1,4 @@
-import db from "@/lib/db"
+import { supabase } from "@/lib/supabase"
 import { formatPrice } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
@@ -6,9 +6,10 @@ import { Plus, Edit, Trash2 } from "lucide-react"
 import { deleteProduct } from "@/lib/admin-actions"
 
 export default async function AdminProductsPage() {
-  const products = await db.product.findMany({
-    orderBy: { createdAt: "desc" },
-  })
+  const { data: products } = await supabase
+    .from("products")
+    .select("*")
+    .order("createdAt", { ascending: false })
 
   return (
     <div>
@@ -35,7 +36,7 @@ export default async function AdminProductsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {products.map((product) => (
+            {(products || []).map((product) => (
               <tr key={product.id} className="hover:bg-secondary/5 transition-colors">
                 <td className="p-4">
                   <div className="flex items-center">

@@ -1,10 +1,12 @@
-import db from "@/lib/db"
+import { supabase } from "@/lib/supabase"
 
 export async function getFeaturedProducts() {
-  const products = await db.product.findMany({
-    where: { isFeatured: true },
-    orderBy: { createdAt: "desc" },
-    take: 4,
-  })
-  return products
+  const { data: products } = await supabase
+    .from("products")
+    .select("*")
+    .eq("isFeatured", true)
+    .order("createdAt", { ascending: false })
+    .limit(4)
+
+  return products || []
 }
