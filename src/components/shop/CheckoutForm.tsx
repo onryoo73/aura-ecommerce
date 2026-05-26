@@ -8,7 +8,6 @@ import {
 } from "@stripe/react-stripe-js";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
-import { createOrder } from "@/lib/order-actions";
 
 export default function CheckoutForm({ total }: { total: number }) {
   const stripe = useStripe();
@@ -39,8 +38,16 @@ export default function CheckoutForm({ total }: { total: number }) {
       setMessage(error.message ?? "An unexpected error occurred.");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       clearCart();
-      await createOrder(items.map((i) => ({ id: i.id, quantity: i.quantity, price: i.price })));
-      window.location.href = "/account/orders";
+      const res = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((i) => ({ id: i.id, quantity: i.quantity, price: i.price })),
+        }),
+      });
+      if (res.ok) {
+        window.location.href = "/account/orders";
+      }
     } else {
       setMessage("An unexpected error occurred.");
     }
