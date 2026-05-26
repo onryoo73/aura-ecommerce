@@ -8,11 +8,11 @@ export async function registerUser(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  if (!email || !password) {
+  if (!email || !password || !name) {
     return { error: "Missing fields" };
   }
 
-  const { data: existingUser } = await supabase
+  const { data: existingUser, error: existingError } = await supabase
     .from("users")
     .select("id")
     .eq("email", email)
@@ -24,11 +24,16 @@ export async function registerUser(formData: FormData) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await supabase.from("users").insert({
+  const { error: insertError } = await supabase.from("users").insert({
     name,
     email,
     password: hashedPassword,
   });
+
+  if (insertError) {
+    console.error("[REGISTER_ERROR]", insertError);
+    return { error: "Failed to create account" };
+  }
 
   return { success: true };
 }

@@ -25,15 +25,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .eq("email", credentials.email as string)
           .single()
 
-        if (error || !user) return null
+        if (error || !user) {
+          console.log("[AUTH] User not found for email:", credentials.email);
+          return null
+        }
+
+        if (!user.password) {
+          console.log("[AUTH] User has no password hash");
+          return null
+        }
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
           user.password
         )
 
-        if (!isValid) return null
+        if (!isValid) {
+          console.log("[AUTH] Password mismatch for email:", credentials.email);
+          return null
+        }
 
+        console.log("[AUTH] Login successful for:", credentials.email);
         return {
           id: user.id,
           email: user.email,
