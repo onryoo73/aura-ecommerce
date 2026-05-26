@@ -15,6 +15,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 export default function CheckoutPage() {
   const { items, getTotal } = useCartStore();
   const [clientSecret, setClientSecret] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,8 +26,17 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items }),
       })
-        .then((res) => res.json())
-        .then((data) => setClientSecret(data.clientSecret));
+        .then(async (res) => {
+          if (!res.ok) {
+            const text = await res.text();
+            throw new Error(text || "Unable to start checkout");
+          }
+          return res.json();
+        })
+        .then((data) => setClientSecret(data.clientSecret))
+        .catch((err) => {
+          setError(err.message || "Unable to initialize checkout.");
+        });
     }
   }, [items]);
 
@@ -96,7 +106,25 @@ export default function CheckoutPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          {clientSecret ? (
+          {error ? (
+            <div className="space-y-6">
+              <div className="bg-destructive/10 text-destructive p-6 rounded-md">
+                <p className="text-sm font-semibold">Unable to start checkout.</p>
+                <p className="text-xs mt-2 text-muted-foreground">{error}</p>
+              </div>
+              <div className="space-y-3 text-center">
+                <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground">Please sign in or register to complete your purchase.</p>
+                <div className="flex flex-col gap-3">
+                  <Link href="/login" className="block bg-foreground text-background py-3 rounded-lg text-xs tracking-[0.2em] uppercase font-bold">
+                    Sign In
+                  </Link>
+                  <Link href="/register" className="block border border-foreground text-foreground py-3 rounded-lg text-xs tracking-[0.2em] uppercase font-bold">
+                    Create Account
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : clientSecret ? (
             <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
               <CheckoutForm total={total} />
             </Elements>

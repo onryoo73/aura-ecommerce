@@ -72,7 +72,7 @@ export default function ProfileDropdown() {
                   Login
                 </Link>
                 <Link
-                  href="/login"
+                  href="/register"
                   className="block px-4 py-2 text-xs hover:bg-secondary transition-colors"
                   onClick={() => setIsOpen(false)}
                 >

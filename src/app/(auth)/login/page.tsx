@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const registered = searchParams.get("registered") === "true";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,6 +46,12 @@ export default function LoginPage() {
       <div className="w-full max-w-md p-8 bg-white rounded-2xl border border-border shadow-sm">
         <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
         <p className="text-muted-foreground mb-8">Enter your details to sign in to your account.</p>
+
+        {registered && (
+          <div className="bg-emerald-100 text-emerald-800 text-sm p-3 rounded-md mb-6">
+            Your account was created successfully. Please sign in.
+          </div>
+        )}
 
         {error && (
           <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md mb-6">
