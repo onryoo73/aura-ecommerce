@@ -82,17 +82,32 @@ CREATE TABLE IF NOT EXISTS promo_banner (
 
 -- Enable RLS (Row Level Security) for public reads on products
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Products are publicly readable" ON products;
 CREATE POLICY "Products are publicly readable" ON products FOR SELECT USING (true);
 
 ALTER TABLE promo_banner ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Promo banner is publicly readable" ON promo_banner;
 CREATE POLICY "Promo banner is publicly readable" ON promo_banner FOR SELECT USING (true);
+
+-- Enable RLS on users table with policies for auth
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+
+-- Allow anyone to sign up (insert their own user)
+DROP POLICY IF EXISTS "Allow public to insert new users" ON users;
+CREATE POLICY "Allow public to insert new users" ON users
+  FOR INSERT WITH CHECK (true);
+
+-- Allow public to read users by email (for login verification)
+DROP POLICY IF EXISTS "Allow public to read users by email" ON users;
+CREATE POLICY "Allow public to read users by email" ON users
+  FOR SELECT USING (true);
 
 -- Seed admin user (password: Admin123!)
 INSERT INTO users (email, name, password, is_admin)
 VALUES (
   'admin@aura.com',
   'Admin User',
-  '$2a$10$...', -- you need to generate this, or use the seed script below
+  '$2b$10$g0Mz6F4gH0TK3hqFnKKrHOt66Ha7HNTfjCD5n8MXq1i9sel5X60ay',
   true
 )
 ON CONFLICT (email) DO NOTHING;
