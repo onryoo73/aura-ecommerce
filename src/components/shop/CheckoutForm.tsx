@@ -8,11 +8,12 @@ import {
 } from "@stripe/react-stripe-js";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
+import { createOrder } from "@/lib/order-actions";
 
 export default function CheckoutForm({ total }: { total: number }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { clearCart } = useCartStore();
+  const { items, clearCart } = useCartStore();
 
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +39,8 @@ export default function CheckoutForm({ total }: { total: number }) {
       setMessage(error.message ?? "An unexpected error occurred.");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       clearCart();
-      window.location.href = `/success?payment_intent=${paymentIntent.id}`;
+      await createOrder(items.map((i) => ({ id: i.id, quantity: i.quantity, price: i.price })));
+      window.location.href = "/account/orders";
     } else {
       setMessage("An unexpected error occurred.");
     }
