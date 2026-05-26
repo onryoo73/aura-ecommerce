@@ -102,6 +102,12 @@ DROP POLICY IF EXISTS "Allow public to read users by email" ON users;
 CREATE POLICY "Allow public to read users by email" ON users
   FOR SELECT USING (true);
 
+-- Orders: no RLS (auth handled by NextAuth at the app level)
+ALTER TABLE orders DISABLE ROW LEVEL SECURITY;
+
+-- Order items: no RLS (auth handled by NextAuth at the app level)
+ALTER TABLE order_items DISABLE ROW LEVEL SECURITY;
+
 -- Seed admin user (password: Admin123!)
 INSERT INTO users (email, name, password, is_admin)
 VALUES (
