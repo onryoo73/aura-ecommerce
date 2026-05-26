@@ -37,7 +37,7 @@ export async function POST(req: Request) {
       currency: "usd",
       metadata: {
         userId: session.user.id as string,
-        productIds: JSON.stringify(items.map((i: any) => i.id)),
+        items: JSON.stringify(items.map((i: any) => ({ id: i.id, quantity: i.quantity }))),
       },
     });
 

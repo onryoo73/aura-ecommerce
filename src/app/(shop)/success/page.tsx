@@ -1,31 +1,38 @@
 import Link from "next/link";
-import { CheckCircle2, ShoppingBag } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function SuccessPage() {
   return (
-    <div className="container mx-auto py-20 px-4 text-center min-h-[70vh] flex flex-col items-center justify-center">
-      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-        <CheckCircle2 className="w-10 h-10 text-green-600" />
-      </div>
-      <h1 className="text-4xl font-bold mb-4 tracking-tight">Order Confirmed</h1>
-      <p className="text-muted-foreground mb-12 max-w-md mx-auto text-lg">
-        Thank you for your purchase! We&apos;ve received your order and are getting it ready for shipment.
-      </p>
-      
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Link 
-          href="/account/orders" 
-          className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity"
-        >
-          View Order History
-        </Link>
-        <Link 
-          href="/" 
-          className="bg-secondary text-secondary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-secondary/80 transition-colors flex items-center justify-center"
-        >
-          <ShoppingBag className="w-5 h-5 mr-2" />
-          Back to Shop
-        </Link>
+    <div className="w-full min-h-screen bg-background pt-28 px-6 md:px-10 pb-24 transition-colors duration-300 flex flex-col items-center justify-center">
+      <div className="w-full max-w-2xl mx-auto text-center">
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-emerald-500/50 flex items-center justify-center mx-auto mb-8">
+          <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-emerald-500" />
+        </div>
+
+        <div className="border-b border-foreground/15 pb-4 mb-8">
+          <h1 className="text-[15vw] md:text-[10vw] font-black tracking-[-0.04em] leading-[0.85] text-foreground uppercase">
+            Confirmed
+          </h1>
+        </div>
+
+        <p className="text-muted-foreground text-sm tracking-wider uppercase max-w-md mx-auto mb-12">
+          Thank you for your purchase. We&apos;ve received your order and are getting it ready.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/account/orders"
+            className="border border-foreground/30 hover:border-foreground px-8 py-4 text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300"
+          >
+            View Order History
+          </Link>
+          <Link
+            href="/"
+            className="bg-foreground text-background px-8 py-4 text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300 hover:opacity-90"
+          >
+            Back to Shop
+          </Link>
+        </div>
       </div>
     </div>
   );

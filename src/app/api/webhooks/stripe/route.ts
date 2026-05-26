@@ -23,12 +23,12 @@ export async function POST(req: Request) {
 
   if (event.type === "payment_intent.succeeded") {
     const userId = session.metadata.userId;
-    const productIds = JSON.parse(session.metadata.productIds);
+    const itemsMeta = JSON.parse(session.metadata.items || "[]");
 
     const { data: order } = await supabase
       .from("orders")
       .insert({
-        userId,
+        user_id: userId,
         total: session.amount,
         status: "PAID",
       })
@@ -36,24 +36,25 @@ export async function POST(req: Request) {
       .single();
 
     if (order) {
-      for (const productId of productIds) {
-        await supabase.from("order_items").insert({
-          orderId: order.id,
-          productId,
-          quantity: 1,
-          price: 0,
-        });
-
+      for (const item of itemsMeta) {
         const { data: product } = await supabase
           .from("products")
-          .select("stock")
-          .eq("id", productId)
+          .select("price, stock")
+          .eq("id", item.id)
           .single();
+
+        await supabase.from("order_items").insert({
+          order_id: order.id,
+          product_id: item.id,
+          quantity: item.quantity,
+          price: product?.price || 0,
+        });
+
         if (product) {
           await supabase
             .from("products")
-            .update({ stock: product.stock - 1 })
-            .eq("id", productId);
+            .update({ stock: Math.max(0, (product.stock || 0) - item.quantity) })
+            .eq("id", item.id);
         }
       }
     }
