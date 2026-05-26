@@ -18,11 +18,14 @@ export async function POST(req: Request) {
     const itemDetails: { id: string; quantity: number; price: number }[] = []
 
     for (const item of items) {
-      const { data: product } = await supabase
+      const { data: product, error: productError } = await supabase
         .from("products")
         .select("price, stock")
         .eq("id", item.id)
-        .single()
+        .maybeSingle()
+      if (productError) {
+        return NextResponse.json({ error: `Product lookup error: ${productError.message}` }, { status: 500 })
+      }
       if (product) {
         total += product.price * item.quantity
         itemDetails.push({ id: item.id, quantity: item.quantity, price: product.price })
@@ -30,7 +33,7 @@ export async function POST(req: Request) {
     }
 
     if (total === 0) {
-      return NextResponse.json({ error: "Invalid total" }, { status: 400 })
+      return NextResponse.json({ error: "Invalid total - no valid products found" }, { status: 400 })
     }
 
     const { data: order, error: orderError } = await supabase
@@ -41,27 +44,31 @@ export async function POST(req: Request) {
         status: "PAID",
       })
       .select("id")
-      .single()
+      .maybeSingle()
 
     if (orderError || !order) {
-      return NextResponse.json({ error: "Failed to create order" }, { status: 500 })
+      return NextResponse.json({ error: `Order insert error: ${orderError?.message || "unknown"}` }, { status: 500 })
     }
 
     for (const item of itemDetails) {
-      const { data: product } = await supabase
+      const { data: product, error: stockError } = await supabase
         .from("products")
         .select("stock")
         .eq("id", item.id)
-        .single()
+        .maybeSingle()
 
-      await supabase.from("order_items").insert({
+      const { error: insertError } = await supabase.from("order_items").insert({
         order_id: order.id,
         product_id: item.id,
         quantity: item.quantity,
         price: item.price,
       })
 
-      if (product) {
+      if (insertError) {
+        return NextResponse.json({ error: `Order item insert error: ${insertError.message}` }, { status: 500 })
+      }
+
+      if (product && !stockError) {
         await supabase
           .from("products")
           .update({ stock: Math.max(0, (product.stock || 0) - item.quantity) })

@@ -37,7 +37,6 @@ export default function CheckoutForm({ total }: { total: number }) {
     if (error) {
       setMessage(error.message ?? "An unexpected error occurred.");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
-      clearCart();
       const res = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,8 +44,13 @@ export default function CheckoutForm({ total }: { total: number }) {
           items: items.map((i) => ({ id: i.id, quantity: i.quantity, price: i.price })),
         }),
       });
+
       if (res.ok) {
+        clearCart();
         window.location.href = "/account/orders";
+      } else {
+        const data = await res.json();
+        setMessage(data.error || "Failed to create order. Please contact support.");
       }
     } else {
       setMessage("An unexpected error occurred.");
